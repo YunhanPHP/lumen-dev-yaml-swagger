@@ -10,7 +10,7 @@ Swagger 2.0 for Lumen 5
 ============
 
 ````
-composer require --dev yunhantech/swagger-lumen
+composer require --dev yunhantech/swagger-lumen-yaml
 ````
 
 
