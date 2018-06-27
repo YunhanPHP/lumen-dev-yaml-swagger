@@ -51,8 +51,10 @@ class Generator extends \SwaggerLume\Generator
         }
     }
 
-    private static function loadYaml($filename, Swagger $swagger, $excludeDirs)
+    public static function getYamlData()
     {
+        $excludeDirs = config('swagger-lume.paths.excludes');
+
         // 读取注释目录并解析
         $yamlDir = config('swagger-lume.paths.yamlAnnotations', base_path('docs'));
         $finder = self::finder($yamlDir, $excludeDirs);
@@ -61,6 +63,12 @@ class Generator extends \SwaggerLume\Generator
             $fileData = Yaml::parse(file_get_contents($file));
             $yamlData = self::mergeData($yamlData, $fileData);
         }
+        return $yamlData;
+    }
+
+    private static function loadYaml($filename, Swagger $swagger)
+    {
+        $yamlData = self::getYamlData();
 
         // 迁移PHP解析出来的数据
         $phpData = (array) $swagger->jsonSerialize();
