@@ -60,8 +60,12 @@ class Generator extends \SwaggerLume\Generator
         $finder = self::finder($yamlDir, $excludeDirs);
         $yamlData = [];
         foreach ($finder as $file) {
-            $fileData = Yaml::parse(file_get_contents($file));
-            $yamlData = self::mergeData($yamlData, $fileData);
+            try {
+                $fileData = Yaml::parse(file_get_contents($file));
+                $yamlData = self::mergeData($yamlData, $fileData);
+            } catch (\Exception $e) {
+                throw new Exception('Failed to parse file("' . $file . '")');
+            }
         }
         return $yamlData;
     }
@@ -79,13 +83,15 @@ class Generator extends \SwaggerLume\Generator
 
     private static function mergeData($oldData, $newData)
     {
-        $keys = array_keys($newData);
-        foreach ($keys as $key) {
-            // 该字段已存在，且为数组则合并数据；否则则覆盖原有数据
-            if (isset($oldData[$key]) && is_array($newData[$key])) {
-                $oldData[$key] = array_merge((array) $oldData[$key], $newData[$key]);
-            } else {
-                $oldData[$key] = $newData[$key];
+        if (!empty($newData)) {
+            $keys = array_keys($newData);
+            foreach ($keys as $key) {
+                // 该字段已存在，且为数组则合并数据；否则则覆盖原有数据
+                if (isset($oldData[$key]) && is_array($newData[$key])) {
+                    $oldData[$key] = array_merge((array) $oldData[$key], $newData[$key]);
+                } else {
+                    $oldData[$key] = $newData[$key];
+                }
             }
         }
         return $oldData;
