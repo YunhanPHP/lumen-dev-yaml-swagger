@@ -55,16 +55,23 @@ class Generator extends \SwaggerLume\Generator
     {
         $excludeDirs = config('swagger-lume.paths.excludes');
 
-        // 读取注释目录并解析
-        $yamlDir = config('swagger-lume.paths.yamlAnnotations', base_path('docs'));
-        $finder = self::finder($yamlDir, $excludeDirs);
+        // 读取注释目录并解析，支持数组
+        $yamlDirs = config('swagger-lume.paths.yamlAnnotations', base_path('docs'));
         $yamlData = [];
-        foreach ($finder as $file) {
-            try {
-                $fileData = Yaml::parse(file_get_contents($file));
-                $yamlData = self::mergeData($yamlData, $fileData);
-            } catch (\Exception $e) {
-                throw new Exception('Failed to parse file("' . $file . '")');
+        if (is_string($yamlDirs)) {
+            $yamlDirs = [$yamlDirs];
+        }
+        if (is_array($yamlDirs)) {
+            foreach ($yamlDirs as $yamlDir) {
+                $finder = self::finder($yamlDir, $excludeDirs);
+                foreach ($finder as $file) {
+                    try {
+                        $fileData = Yaml::parse(file_get_contents($file));
+                        $yamlData = self::mergeData($yamlData, $fileData);
+                    } catch (\Exception $e) {
+                        throw new Exception('Failed to parse file("' . $file . '")');
+                    }
+                }
             }
         }
         return $yamlData;
