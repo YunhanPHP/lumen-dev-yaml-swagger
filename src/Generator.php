@@ -56,7 +56,7 @@ class Generator extends \SwaggerLume\Generator
         $excludeDirs = config('swagger-lume.paths.excludes');
 
         // 读取注释目录并解析，支持数组
-        $yamlDirs = config('swagger-lume.paths.yamlAnnotations', base_path('docs'));
+        $yamlDirs = config('swagger-lume.paths.yamlAnnotations', base_path('apps'));
         $yamlData = [];
         if (is_string($yamlDirs)) {
             $yamlDirs = [$yamlDirs];
