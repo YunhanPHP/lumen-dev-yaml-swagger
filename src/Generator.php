@@ -5,6 +5,7 @@ namespace Yunhan\Swagger;
 use Exception;
 use Illuminate\Support\Facades\File;
 use InvalidArgumentException;
+use Swagger\Annotations\OpenApi;
 use Swagger\Annotations\Swagger;
 use Swagger\Util;
 use SwaggerLume\SecurityDefinitions;
@@ -27,7 +28,11 @@ class Generator extends \SwaggerLume\Generator
 
             File::makeDirectory($docDir);
             $excludeDirs = config('swagger-lume.paths.excludes');
-            $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
+            if (version_compare(config('swagger-lume.swagger_version'), '3.0', '>=')) {
+                $swagger = \OpenApi\scan($appDir, ['exclude' => $excludeDirs]);
+            } else {
+                $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
+            }
 
             if (config('swagger-lume.paths.base') !== null) {
                 $swagger->basePath = config('swagger-lume.paths.base');
@@ -77,7 +82,12 @@ class Generator extends \SwaggerLume\Generator
         return $yamlData;
     }
 
-    private static function loadYaml($filename, Swagger $swagger)
+    /**
+     * @param                 $filename
+     * @param Swagger|OpenApi $swagger
+     * @throws Exception
+     */
+    private static function loadYaml($filename, $swagger)
     {
         $yamlData = self::getYamlData();
 
