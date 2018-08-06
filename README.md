@@ -32,7 +32,7 @@ composer require --dev yunhanphp/lumen-dev-yaml-swagger
     ````php
     [
         "paths" => [
-            "yamlAnnotations" => base_path('docs') // 默认目录
+            "yamlAnnotations" => [base_path('docs')] // 默认目录
         ]
     ]
     ````
