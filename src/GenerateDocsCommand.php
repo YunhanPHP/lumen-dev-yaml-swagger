@@ -1,6 +1,6 @@
 <?php
 
-namespace Yunhan\Swagger;
+namespace YunhanDev\Swagger;
 
 class GenerateDocsCommand extends \SwaggerLume\Console\GenerateDocsCommand
 {

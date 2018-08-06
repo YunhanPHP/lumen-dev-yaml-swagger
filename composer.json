@@ -31,7 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Yunhan\\Swagger\\": "src"
+            "YunhanDev\\Swagger\\": "src"
         }
     },
     "autoload-dev": {

@@ -26,7 +26,7 @@ composer require --dev yunhanphp/lumen-dev-yaml-swagger
     ```
 - 注册服务:
     ```php
-        $app->register(\Yunhan\Swagger\SwaggerLumenServiceProvider::class);
+        $app->register(\YunhanDev\Swagger\SwaggerLumenServiceProvider::class);
     ```
 - 配置YAML目录 `config/swagger-lume.php`：
     ````php
