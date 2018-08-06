@@ -1,6 +1,6 @@
 <?php
 
-namespace YunhanTech\Swagger;
+namespace Yunhan\Swagger;
 
 class SwaggerLumenServiceProvider extends \Illuminate\Support\ServiceProvider
 {

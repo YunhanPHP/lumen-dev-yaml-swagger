@@ -1,5 +1,5 @@
 {
-    "name": "yunhantech/swagger-lumen-yaml",
+    "name": "yunhanphp/lumen-dev-yaml-swagger",
     "type": "library",
     "description": "Swagger文档，用PHP注释可读性差，维护性差，使用YAML格式",
     "keywords": [
@@ -31,7 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "YunhanTech\\Swagger\\": "src"
+            "Yunhan\\Swagger\\": "src"
         }
     },
     "autoload-dev": {

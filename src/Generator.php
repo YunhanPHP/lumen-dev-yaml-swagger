@@ -1,6 +1,6 @@
 <?php
 
-namespace YunhanTech\Swagger;
+namespace Yunhan\Swagger;
 
 use Exception;
 use Illuminate\Support\Facades\File;
