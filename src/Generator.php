@@ -75,7 +75,7 @@ class Generator extends \SwaggerLume\Generator
                         $fileData = Yaml::parse(file_get_contents($file));
                         $yamlData = self::mergeData($yamlData, $fileData);
                     } catch (\Exception $e) {
-                        throw new Exception('Failed to parse file("' . $file . '")');
+                        throw new Exception('Failed to parse file("' . $file . '"):' . $e->getMessage());
                     }
                 }
             }
