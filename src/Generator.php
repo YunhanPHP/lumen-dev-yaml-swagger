@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Support\Facades\File;
 use InvalidArgumentException;
 use Swagger\Annotations\OpenApi;
-use Swagger\Annotations\Swagger;
 use Swagger\Util;
 use SwaggerLume\SecurityDefinitions;
 use Symfony\Component\Finder\Finder;
@@ -28,21 +27,26 @@ class Generator extends \SwaggerLume\Generator
 
             File::makeDirectory($docDir);
             $excludeDirs = config('swagger-lume.paths.excludes');
-            if (version_compare(config('swagger-lume.swagger_version'), '3.0', '>=')
-                && function_exists('\OpenApi\scan')) {
-                $swagger = \OpenApi\scan($appDir, ['exclude' => $excludeDirs]);
-            } else {
-                $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
-            }
-
-            if (config('swagger-lume.paths.base') !== null) {
-                $swagger->basePath = config('swagger-lume.paths.base');
+            try {
+                if (version_compare(config('swagger-lume.swagger_version'), '3.0', '>=')
+                    && function_exists('\OpenApi\scan')) {
+                    $swagger = \OpenApi\scan($appDir, ['exclude' => $excludeDirs]);
+                } else {
+                    $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
+                }
+                if (config('swagger-lume.paths.base') !== null) {
+                    $swagger->basePath = config('swagger-lume.paths.base');
+                }
+                $phpData = (array)$swagger->jsonSerialize();
+            } catch (\Exception $exception) {
+                print_r('Warning: ' . $exception->getMessage());
+                $phpData = [];
             }
 
             $filename = $docDir.'/'.config('swagger-lume.paths.docs_json');
 
             // 兼容yaml
-            self::loadYaml($filename, $swagger, $excludeDirs);
+            self::loadYaml($filename, $phpData);
 
             // $swagger->saveAs($filename);
 
@@ -84,16 +88,13 @@ class Generator extends \SwaggerLume\Generator
     }
 
     /**
-     * @param                 $filename
-     * @param Swagger|OpenApi $swagger
+     * @param       $filename
+     * @param array $phpData
      * @throws Exception
      */
-    private static function loadYaml($filename, $swagger)
+    private static function loadYaml($filename, $phpData)
     {
         $yamlData = self::getYamlData();
-
-        // 迁移PHP解析出来的数据
-        $phpData = (array) $swagger->jsonSerialize();
 
         // 保存文件
         self::saveAs($filename, json_encode(self::mergeData($phpData, $yamlData)));
